@@ -14,13 +14,13 @@ function App() {
   return (
     <>
     <ThemeProvider value={true}>
+      
       <ToDoProvider>
         <FilterButton></FilterButton>
         <List></List>
-        
         <AddNew></AddNew>
-        
       </ToDoProvider>
+
       <ChangeThemeButton></ChangeThemeButton>
     </ThemeProvider>
     </>

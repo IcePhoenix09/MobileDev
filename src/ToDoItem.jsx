@@ -1,15 +1,22 @@
 
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 
 import { ListContext } from "./ListContext";
 import { ThemeContext } from "./ThemeContext";
 
-export function ToDoItem({index, ref}) {
-    const {tasks, setTasks, addRef, itemRefs} = useContext(ListContext);
+export function ToDoItem({index}) {
+    const {tasks, setTasks, itemRefs} = useContext(ListContext);
 
     const {isDark} = useContext(ThemeContext);
 
     const theme = isDark ? "dark-theme-item" : "light-theme-item";
+    
+    const addRef = useCallback((element) => {
+        console.log("Adding ref element <" + tasks[index].name + "> with index - " + index);
+        console.log("");
+
+        itemRefs.current.splice(index, 1, element)
+    }, [index]);
 
     return (
         <div key={index}>
@@ -19,7 +26,7 @@ export function ToDoItem({index, ref}) {
                 setTasks(newTasks);
             }}/>
             
-            <input className={theme} type="text" value={tasks[index].name} placeholder="Enter task" ref={(element) => addRef(element, index)} onChange={(e) => {
+            <input className={theme} type="text" value={tasks[index].name} placeholder="Enter task" ref={addRef} onChange={(e) => {
                 const newTasks = [...tasks];
                 newTasks[index].name = e.target.value;
                 setTasks(newTasks);
@@ -28,14 +35,9 @@ export function ToDoItem({index, ref}) {
 
             <button className={theme} onClick={() => {
                 const newTasks = [...tasks];
-                itemRefs.current.length = 0;
-                console.log("length in button - " + itemRefs.current.length);
-                newTasks.splice(index, 1);
+                itemRefs.current.splice(index, 1);
 
-                
-                for (let i = 0; i < newTasks.length; i++) {
-                    console.log("Element -" + i + " - " + newTasks[i].name);
-                }
+                newTasks.splice(index, 1);
                 
                 setTasks(newTasks);
             }}>Delete</button>

@@ -1,5 +1,5 @@
 
-import { createContext, useState, useMemo, useRef, useEffect } from "react";
+import { createContext, useState, useMemo, useRef} from "react";
 
 export class Task {
     constructor(name, done) {
@@ -11,15 +11,8 @@ export class Task {
 export const ListContext = createContext();
 
 export function ToDoProvider({ children }) {
+    // reference to all the input field in the list
     const itemRefs = useRef(new Array())
-
-    const addRef = (element, index) => {
-        console.log("length in addRef - " + itemRefs.current.length);
-        console.log("Adding element " + tasks[index].name + " with index - " + index);
-        console.log("");
-
-        itemRefs.current.splice(index, 1, element)
-    }
     
     const [tasks, setTasks] = useState([
         new Task("Task 1", false),
@@ -27,14 +20,9 @@ export function ToDoProvider({ children }) {
         new Task("Task 3", false),
     ]);
 
-    const [filter, setFilter] = useState("None");
+    const [isFocus, setIsFocus] = useState(false); // if the last element should be focused
 
-    useEffect(() => {
-        console.log("length - " + itemRefs.current.length);
-        const lastindex = itemRefs.current.length - 1;
-        itemRefs.current[lastindex].focus();
-        console.log(lastindex);
-    }, [tasks]);
+    const [filter, setFilter] = useState("None");
 
     const filteredTasks = useMemo(() => {
 
@@ -50,7 +38,7 @@ export function ToDoProvider({ children }) {
     }, [filter, tasks]);
 
     return (
-        <ListContext.Provider value={{ tasks, setTasks, setFilter, filteredTasks, itemRefs, addRef }}>
+        <ListContext.Provider value={{ tasks, setTasks, setFilter, filteredTasks, itemRefs, isFocus, setIsFocus }}>
             {children}
         </ListContext.Provider>
     );
